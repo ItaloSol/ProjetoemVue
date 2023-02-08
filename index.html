@@ -41,8 +41,8 @@
             </div>
             <div class=" ">
               <small class="text-muted float">Ano</small>
-              <input type="text" class=" impute complete colorInput" value="2023
-                GASOLINA">
+              <input type="text" class=" impute complete colorInput" 
+              value="2023 GASOLINA">
             </div>
             <div class=" ">
               <small class="text-muted float">Marca</small>
@@ -51,8 +51,8 @@
             </div>
             <div class=" ">
               <small class="text-muted float">Modelo</small>
-              <input type="text" class=" impute complete colorInput" value="CITY
-                SEDAN DX 1.5 FLEX 16V MEC.">
+              <input type="text" class=" impute complete colorInput" 
+              value="CITY SEDAN DX 1.5 FLEX 16V MEC.">
             </div>
             <div class="">
               <small class="text-muted float">UF de licenciamento</small>
@@ -80,30 +80,29 @@
 
       <div class=" branco col-3 ">
         <ul>
+          
           <input v-model="cliente" class="h1 impute-zerado1 pesquisaR "/>
           <div class="cliente"></div>
           <div style="max-width: 100%; max-height: 100%;">
-
-            <div style="margin-left: 50%;" class=" content forma2">
+            <!-- {{valorCalc}} {{entradaReal}} {{liberado}} {{porcentagem2}} {{brutoCalc}} {{entradaMin}} {{entradaMinRs}} -->
+            <div style="margin-left: 20%;" class=" content forma2">
               <div class=" forma1"></div>
               <p class="texteforma">Entrada minima</p>
-              <p class="fontebols">R$ 6.000,00</p>
+              <input v-model="entradaReal" style="border: none; padding-bottom: 20%;" class=" p-0  fontebols">
             </div>
            
-            <input type="range" @click="getPosition($event)" class=" cor-imput"
+            <input type="range" @click="getPosition($event)" min="0" max="100" :value="porcentagem2" class=" cor-imput"
               id="formRange1" />
-            <div :style="{left: left + 'px', top: top + 'px'}" class="pinguelo completapinguelo">80%
+            <div :style="{left: left + 'px', top: top + 'px'}" class="pinguelo completapinguelo">{{porcentagem2}}%
             </div>
           </div>
           <div class="row">
             <div class="col-4 text-muted float fonte">Valor da entrada
-              <input type="text" v-model="entrada" class=" fonte impute
+              <input type="text" v-model="entradaMinRs" class=" fonte impute
                 complete">
             </div>
             <div class="col-4 text-muted float fonte">Valor Liberado
-              <input type="text" class=" fonte impute complete" :value="'R$ ' +
-                liberado1" placeholder="R$
-                0,00">
+              <input type="text" class=" fonte impute complete" :value="liberado1" placeholder="R$ 0,00">
             </div>
             <div class="col-3 text-muted float fonte">Parcelas
               <select type="select" v-model="parcelas" class=" fonte impute
@@ -167,7 +166,7 @@
           class="valor-parcelas col-5">R$ {{valorParcela}}</small>
 
         <div> <br><br>
-
+       
           <div class="margem mensagemUm nots ">
             <div class="check"></div>
             <b>Você sabia?</b>Financiamento na promissória você tem total
@@ -255,60 +254,157 @@
         marca: '',
         modelo: '',
         uf: '',
-        valor: 'R$ 60.000,00',
+        valor: 'R$ 80.000,00',
+        valorCalc: 0,
         loja: 'ALFA MOTORS',
         desconto: '',
         entrada: 'R$ 40.000,00',
-        liberado: 54000,
-        liberado1: 54000,
+        entradaReal: 1,
+        liberado: 6400,
+        entradaMin: 700,
+        entradaMinRs: 'R$ 6.000,00',
+        liberado1: 'R$ 54.000,00',
         parcelas: 48,
+        brutoCalc: 0,
+        porcentagem: 0,
+        porcentagem2: 0,
         valorParcela: 0,
         juros: 0.018,
 
       },
+      
       methods: {
         CalcularJuros(){
          const jurus = this.liberado * this.juros * this.parcelas;
-         const soma = this.liberado + jurus ;
-        
+         const soma = +this.liberado + jurus ;
          const calculo = soma / this.parcelas + 47.86 ;
-         this.valorParcela = calculo.toLocaleString('pt-BR', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-      });
+         this.valorParcela = calculo.toFixed(2);
+
+        },
+        LiberadoReativo(){
+          const calculo = +this.valorCalc - this.entradaMin;
+          this.liberado = calculo;
+          const valor = +this.liberado;
+          this.liberado1 = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+          this.CalcularJuros();
+        },
+        ValorReal(){
+          const valorReAL = this.valor.replace("R$", "").replace(",", ".").replace(".", ",");
+          const valorReal = valorReAL.replace(",", "")
+          this.valorCalc = +valorReal;
+          // ( ( valor_usado - valor_inicial ) / valor_inicial ) * 100
+        },
+        ValorEntrada(){
+          const valorReAL = this.entrada.replace("R$", "").replace(",", ".").replace(".", ",");
+          const valorReal = valorReAL.replace(",", "")
+          this.entradaReal = +valorReal;
+        },
+        ValorLiberado(){
+          const valorReAL = this.liberado1.replace("R$", "").replace(",", ".").replace(".", ",");
+          const valorReal = valorReAL.replace(",", "")
+          this.liberado = +valorReal;
+        },
+        CalculoPorcentagem(){
+          const calculoPor = (+this.liberado / +this.valorCalc) * 100;
+          const calculoPuro = (+this.liberado / +this.valorCalc);
+          this.brutoCalc = calculoPuro;
+          this.porcentagem = 20;
         },
         getPosition(event) {
            const formRange1 = document.querySelector("#formRange1");
-            formRange1.addEventListener("click", (event) => {
+          
+           formRange1.addEventListener("click", (event) => {
               const input = event.target;
               const inputRect = input.getBoundingClientRect();
+        
               if (event.clientX >= inputRect.left && event.clientX <= inputRect.right
                   && event.clientY >= inputRect.top && event.clientY <= inputRect.bottom) {
                 this.left = event.clientX - 20;
                 this.top = event.clientY - 22;
-                    
+              
               } 
             });
+            this.porcentagem2 = formRange1.value;  
+          },
+          EntradaReais(){
+           const entrada = this.entradaMin.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+           
+            this.entradaMinRs = entrada;
+          },
+          PrimeiraEntrada(){
+            const calculo2 =  +this.valorCalc * (20 / 100);
+            const naoerra = (calculo2 / +this.valorCalc) * 100
+            this.entradaReal = calculo2.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});;
+          
+          },
+          
+          EntradaRelativa(){
+           
+            const porcentagem = +this.valorCalc / this.porcentagem2;
+            const calculando = +this.valorCalc * this.porcentagem2;
+            this.entradaMin = +Math.floor(calculando / 100).toFixed(2);
+            this.EntradaReais();
+            this.LiberadoReativo();
+            
           },
          
-        liberador(){
-          this.liberado1 = this.liberado.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-          });
-        },
+         PorcentagemMinima(){
+          if(this.porcentagem2 < +this.porcentagem){
+            this.porcentagem2 = +this.porcentagem;
+          }
+         },
+        
         Entrada(){
           // const contar = this.entrada / this.valor;
         }
       },
+      watch: {
+        valor(novo, antigo){
+          if(novo != 'R$ 0.000,00'){
+            console.log('maior');
+          this.ValorReal();
+          this.CalculoPorcentagem();
+          this.CalcularJuros();
+          this.LiberadoReativo();
+          this.EntradaRelativa();
+          this.PrimeiraEntrada();
+          this.PorcentagemMinima();
+          }
+        },
+        parcelas(){
+          this.CalcularJuros();
+        },
+        entradaMin(novo){
+          this.EntradaReais();
+        },
+        left(novo){
+          this.EntradaRelativa();
+          this.LiberadoReativo();
+        },
+        porcentagem2(novo){
+          this.EntradaRelativa();
+        }
+        
+      },
       created(){
+        this.ValorReal();
+     //   this.ValorEntrada();
+        this.ValorLiberado();
+        this.CalculoPorcentagem();
         this.CalcularJuros();
-        this.liberador();
+        this.PorcentagemMinima();
+        this.PrimeiraEntrada();
       },
       updated(){
-        this.CalcularJuros();
-        this.liberador();
-      }
+      //   this.PorcentagemMinima()
+      //   this.ValorReal();
+      // //  this.ValorEntrada();
+      //   this.ValorLiberado();
+      //   this.CalculoPorcentagem();
+      //   this.CalcularJuros();
+       
+      },
+    
 
     });
    
