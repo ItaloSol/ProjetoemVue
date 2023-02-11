@@ -94,7 +94,7 @@
   height: 30px;
 }
 .vermelho {
-  background: red;
+  background: #cc0000;
 }
 .branco{
   background: white;
@@ -375,6 +375,9 @@
     border-top-right-radius: 40px;
     border-bottom-right-radius: 40px;
     border-bottom-left-radius: 40px
+}
+.bordainvisivel{
+  border: none;
 }
 .completapinguelo{
   display: block;

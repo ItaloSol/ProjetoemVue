@@ -85,10 +85,10 @@
           <div class="cliente"></div>
           <div style="max-width: 100%; max-height: 100%;">
             <!-- {{valorCalc}} {{entradaReal}} {{liberado}} {{porcentagem2}} {{brutoCalc}} {{entradaMin}} {{entradaMinRs}} -->
-            <div style="margin-left: 20%;" class=" content forma2">
+            <div :style="{'margin-left': porcentagemMinima + '%'}" class=" content forma2">
               <div class=" forma1"></div>
               <p class="texteforma">Entrada minima</p>
-              <input v-model="entradaReal" style="border: none; padding-bottom: 20%;" class=" p-0  fontebols">
+              <input v-model="entradaReal" :style="{'padding-bottom': porcentagemMinima +'%'}" class="bordainvisivel p-0  fontebols">
             </div>
            
             <input type="range" @click="getPosition($event)" min="0" max="100" :value="porcentagem2" class=" cor-imput"
@@ -270,6 +270,7 @@
         porcentagem2: 0,
         valorParcela: 0,
         juros: 0.018,
+        porcentagemMinima: 20,
 
       },
       
@@ -288,6 +289,12 @@
           this.liberado1 = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
           this.CalcularJuros();
         },
+        ValorEntradaReal(){
+          const valorReAL = this.entradaMinRs.replace("R$", "").replace(",", ".").replace(".", ",");
+          const valorReal = valorReAL.replace(",", "")
+          this.entradaMin = +valorReal;
+          // ( ( valor_usado - valor_inicial ) / valor_inicial ) * 100
+        },
         ValorReal(){
           const valorReAL = this.valor.replace("R$", "").replace(",", ".").replace(".", ",");
           const valorReal = valorReAL.replace(",", "")
@@ -298,6 +305,13 @@
           const valorReAL = this.entrada.replace("R$", "").replace(",", ".").replace(".", ",");
           const valorReal = valorReAL.replace(",", "")
           this.entradaReal = +valorReal;
+        },
+        PorcentagemDaEntrada(){
+          const entrada = this.entradaReal.replace("R$", "").replace(",", ".").replace(".", ",");
+          const valorEntrada = entrada.replace(",", "")
+          const calculo = (+valorEntrada / this.valorCalc) * 100;
+          this.porcentagemMinima = calculo;
+          console.log(calculo);
         },
         ValorLiberado(){
           const valorReAL = this.liberado1.replace("R$", "").replace(",", ".").replace(".", ",");
@@ -335,7 +349,7 @@
             const calculo2 =  +this.valorCalc * (20 / 100);
             const naoerra = (calculo2 / +this.valorCalc) * 100
             this.entradaReal = calculo2.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});;
-          
+           
           },
           
           EntradaRelativa(){
@@ -359,9 +373,20 @@
         }
       },
       watch: {
+        entradaReal(nova){
+          if(nova != 'R$ 0.000,00'){
+            this.PorcentagemDaEntrada();
+          }
+        },
+        entradaMinRs(nova){
+          if(nova != 'R$ 0.000,00'){
+            this.ValorEntradaReal();
+            this.LiberadoReativo();
+           // this.CalcularJuros();
+          }
+        },
         valor(novo, antigo){
           if(novo != 'R$ 0.000,00'){
-            console.log('maior');
           this.ValorReal();
           this.CalculoPorcentagem();
           this.CalcularJuros();
