@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link id="appFavicon" rel="icon" type="image/x-icon"
+
       href="img/favicon-SNT.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -87,14 +90,16 @@ input[type="range"]::-moz-range-thumb {
 }
 }
  </style>
+  <form target="_blank" method="POST" action="proposta_gerada.php">
     <div id="app" class=" branco row ">
       <div class=" final body normal col-md-3 ">
         <div class="col-7"></div>
         <div class="col-12">
           <div class="primeira col-4 ">
+           
             <div class=" ">
               <!-- <small class="text-muted float fontecpf">CPF:</small> -->
-              <textarea cols="10" style="position: inline;" class=" textare "
+              <textarea name="cpf" cols="10" style="position: inline;" id="textare" class=" textare "
                 v-model="cpf"></textarea>
             </div>
             <div class=" ">
@@ -109,7 +114,11 @@ input[type="range"]::-moz-range-thumb {
             </div>
             <div class=" ">
               <small class="text-muted float">Modelo</small>
+
+              <input type="text" name="veiculo" id="veiculo" class=" impute complete colorInput" 
+
               <input type="text" class=" impute complete colorInput" 
+
               value="FAN FLEX">
             </div>
             <div class="">
@@ -139,7 +148,7 @@ input[type="range"]::-moz-range-thumb {
       <div class=" branco col-3 ">
         <ul>
           
-          <input v-model="cliente" class="h1 impute-zerado1 pesquisaR "/>
+          <input name="nome_cliente" id="nome_cliente" v-model="cliente" class="h1 impute-zerado1 pesquisaR "/>
           <div class="cliente"></div>
           <div style="max-width: 100%; max-height: 100%;">
             <!-- {{valorCalc}} {{entradaReal}} {{liberado}} {{porcentagem2}} {{brutoCalc}} {{entradaMin}} {{entradaMinRs}} -->
@@ -161,11 +170,19 @@ input[type="range"]::-moz-range-thumb {
                 complete">
             </div>
             <div class="col-4 align-self-stretch m-1 text-muted float fonte">Valor Liberado
+
+              <input type="text" name="liberado" id="liberado" class="  fonte impute complete" :value="liberado1" placeholder="R$ 0,00">
+            </div>
+            
+            <div class="col-4 align-self-stretch m-1 text-muted float fonte">Parcelas   
+              <select name="parcela" id="parcela" type="select" v-model="parcelas" class="  fonte impute
+
               <input type="text" class="  fonte impute complete" :value="liberado1" placeholder="R$ 0,00">
             </div>
             
             <div class="col-4 align-self-stretch m-1 text-muted float fonte">Parcelas   
               <select type="select" v-model="parcelas" class="  fonte impute
+
                 complete">
                 <option>{{parcelas}}</option>
                 <option>60</option>
@@ -225,7 +242,7 @@ input[type="range"]::-moz-range-thumb {
         <div class="linnha "></div>
 
         <div class="margem text-parcela"> Valor das parcelas de</div>
-
+        <input type="hidden" name="valor_parcela" id="valor_parcela" v-model="valorParcela">
         <small class="margem col-3 valor-parcelas text-end"> {{parcelas}}</small><small
           class="col-3 align-text-top xXtex ">X</small><small
           class="valor-parcelas col-5">R$ {{valorParcela}}</small>
@@ -246,8 +263,10 @@ input[type="range"]::-moz-range-thumb {
           </div>
 
           <div class="">
-            <button class="margem botao">ACEITAR PROPOSTA</button>
+        
+            <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="carregarDADOS()" class="margem botao">ACEITAR PROPOSTA</button>
           </div>
+       
         </div>
       </div>
 
@@ -290,20 +309,72 @@ input[type="range"]::-moz-range-thumb {
         </div>
       </footer>
       <!-- / Footer -->
-      <img class="wpp" src="img/whatsapp.png">
+     <!-- Trigger/Open The Modal -->
+
+ <img class="wpp" src="img/whatsapp.png">
 
     </body>
     <script src="vue.js"></script>
     <script src="config.js"></script>
     <script
+   
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"></script>
-
+     
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Confira os dados do PDF!</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <label for="floatingEmptyPlaintextInput">Nome Cliente</label>
+            <input class="form-control" type="text" placeholder="Nome Cliente" name="cliente_n"  id="cliente_n">
+            <label for="floatingEmptyPlaintextInput">CPF</label>
+            <input class="form-control" type="text" placeholder="CPF" name="cpf_n" id="cpf_n">
+            <label for="floatingEmptyPlaintextInput">Veiculo</label>
+            <input class="form-control" type="text" placeholder="Veiculo" name="veiculo_n" id="veiculo_n">
+            <label for="floatingEmptyPlaintextInput">Tipo do Veiculo Carro/Moto</label>
+            <input class="form-control" type="text" placeholder="Tipo do Veiculo Carro/Moto" name="tipoveiculo_n" id="tipoveiculo_n" required>
+            <label for="floatingEmptyPlaintextInput">Valor Liberado</label>
+            <input class="form-control" type="text" placeholder="Valor Liberado" name="liberado_n" id="liberado_n">
+            <label for="floatingEmptyPlaintextInput">Valor Pendente</label>
+            <input class="form-control" type="text" placeholder="Valor Pendente" name="pendente_n" id="pendente_n" value="R$ 1.000,00" required>
+            <label for="floatingEmptyPlaintextInput">Quantidade de Parcelas</label>
+            <input class="form-control" type="text" placeholder="Quantidade de Parcelas" name="parcela_n" id="parcela_n">
+            <label for="floatingEmptyPlaintextInput">Valor de cada parcela</label>
+            <input class="form-control" type="text" placeholder="Valor de cada parcela" name="valorparcela_n" id="valorparcela_n">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">GERAR PROPOSTA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>
+      
   </html>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function(){
+ function carregarDADOS(){
+      const nome_cliente = document.getElementById("nome_cliente").value;
+      const textare = document.getElementById("textare").value;
+      const veiculo = document.getElementById("veiculo").value;
+      const liberado = document.getElementById("liberado").value;
+      const parcela = document.getElementById("parcela").value;
+      const valor_parcela = document.getElementById("valor_parcela").value;
+      document.getElementById("cliente_n").value = nome_cliente;
+      document.getElementById("cpf_n").value = textare;
+      document.getElementById("veiculo_n").value = veiculo;
+      document.getElementById("liberado_n").value = liberado;
+      document.getElementById("parcela_n").value = parcela;
+     document.getElementById("valorparcela_n").value = valor_parcela;
+    }
+  document.addEventListener("DOMContentLoaded", function(){
    var txtarea = document.querySelector("textarea.textare");
    txtarea.style.height = txtarea.scrollHeight+"px";
     });
