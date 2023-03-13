@@ -85,10 +85,7 @@
     border-bottom: 1px solid #ccc;
     background-color: transparent;
 }
-.body{
- 
-  height: 82vh;
-}
+
 .logo{
   width: 300px;
   height: 30px;
@@ -116,6 +113,7 @@
     right: 1.625rem;
     z-index: 999999;
 }
+
 .foot{
   
   position: fixed;
@@ -211,6 +209,7 @@
   font-size: 16px;
     font-weight: 600;
     color: #4d4c59;
+    margin-right: 10px;
     line-height: 21px;
     display: block;
     padding: 20px 0 15px;
@@ -291,6 +290,7 @@
     height: 6px;
     font-size: 12px;
     color: #aeaeba;
+    
 }
 .textare{
   overflow-y: hidden;
@@ -310,7 +310,7 @@
   left: 50%;
   width: 1px;
     height: 100%;
-    
+   
     margin-bottom: 0;
     background-color: #aeaeba;
     float: left;
@@ -334,6 +334,7 @@
   color: #aeaeba;
   font-weight: 400;
   margin-left: 10px;
+ 
 }
 .fontebols{
   left: 50%;
@@ -342,6 +343,7 @@
   font-size: 12px;
   color: #aeaeba;
   font-weight: 700;
+  margin-bottom: 20px;
 }
 .fontecpf{
   font-weight: 600;
